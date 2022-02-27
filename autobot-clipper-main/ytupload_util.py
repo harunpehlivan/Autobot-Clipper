@@ -47,9 +47,8 @@ def upload(filename, title, description, tags, categoryId, privacyStatus):
             client_secrets_file, scopes)
 
 
-        f = open('credentials.txt','r')
-        creds = ast.literal_eval(f.read())
-        f.close()
+        with open('credentials.txt','r') as f:
+            creds = ast.literal_eval(f.read())
         credentials = google.oauth2.credentials.Credentials(**creds)
         # credentials = flow.run_console()
         youtube = googleapiclient.discovery.build(
@@ -59,16 +58,14 @@ def upload(filename, title, description, tags, categoryId, privacyStatus):
             notifySubscribers=True,
             part=",".join(body.keys()),
             body=body,
-            
+
             # TODO: For this request to work, you must replace "YOUR_FILE"
             #       with a pointer to the actual file you are uploading.
             media_body=MediaFileUpload(filename)
         )
         response = request.execute()
         print(response)
-        # videoId = ast.literal_eval(response)['id']
-        videoId = response['id']
-        return videoId
+        return response['id']
 
     except Exception as e:
         print("[!!] ERROR - %s"%e)
