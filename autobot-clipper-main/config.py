@@ -120,9 +120,8 @@ def oauth2callback():
   #              credentials in a persistent database instead.
   credentials = flow.credentials
   creds_to_store = credentials_to_dict(credentials)
-  f = open('credentials.txt','w')
-  f.write(str(creds_to_store))
-  f.close()
+  with open('credentials.txt','w') as f:
+    f.write(str(creds_to_store))
   flask.session['credentials'] = creds_to_store
   session['credentials'] = creds_to_store
   session['authorized'] = 1
@@ -145,9 +144,9 @@ def revoke():
 
   status_code = getattr(revoke, 'status_code')
   if status_code == 200:
-    return('Credentials successfully revoked.' + print_index_table())
+    return f'Credentials successfully revoked.{print_index_table()}'
   else:
-    return('An error occurred.' + print_index_table())
+    return f'An error occurred.{print_index_table()}'
 
 
 @app.route('/clear')
@@ -214,4 +213,3 @@ if __name__ == '__main__':
   print("[*] Go to http://localhost:8080 in your browser to authenticate with your Google Account.")
   time.sleep(2)
   start_server()
-  pass

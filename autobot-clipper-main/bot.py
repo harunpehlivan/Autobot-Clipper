@@ -25,9 +25,8 @@ default_description = ""
 default_categoryId = "20"
 
 try:
-	f=open("constdesc.txt")
-	default_description=f.read()
-	f.close()
+	with open("constdesc.txt") as f:
+		default_description=f.read()
 except Exception as e:
 	default_description=""
 
@@ -52,9 +51,7 @@ def checks():
 		print("[-] Run config.py to authenticate with your google account and create credentials.txt")
 
 def validateInput(inp, pattern):
-	if re.search(pattern, inp):
-		return True
-	return False
+	return bool(re.search(pattern, inp))
 
 
 def getOffsetAndDuration(start_time, end_time):
@@ -114,7 +111,7 @@ def main():
 	os.startfile(filename)
 
 	op = input("[+] Do you want to trim the video? (Y/n): ")
-	if(op in ["Y","y",""]):
+	if (op in ["Y","y",""]):
 		# Open video trimming util
 		if (videotrim_util.trimVideo(filename)):
 			print("[*] Video trimmed successfully!")
@@ -124,11 +121,6 @@ def main():
 			op = input("Do you want to (E)xit or (C)ontinue?")
 			if op in ["E","e",""]:
 				sys.exit()
-
-	elif op in ["N","n"]:
-		# Do not open video trimming util
-		pass
-
 
 	op = input("[+] Upload to YouTube? (Y/n): ")
 
@@ -159,7 +151,7 @@ def main():
 
 		print("[*] Uploading video to YouTube. This might take a while..be patient, do not close the script.")
 		videoId = ytupload_util.upload(filename, yt_title, yt_description, yt_tags, yt_categoryId, yt_privacyStatus)
-		
+
 		if videoId is not None:
 			print("[*] Succesfully uploaded video. ")
 			print("[*] https://www.youtube.com/watch?v=%s"%videoId)
